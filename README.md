@@ -2,7 +2,7 @@
 
 # CF-Server-Monitor
 
-基于 Cloudflare Workers、D1 和 Durable Objects 的轻量级多服务器监控面板。
+基于 Cloudflare Workers、D1 和 Durable Objects 的轻量级多服务器监控面板
 
 <p>
   <a href="README.md">简体中文</a>
