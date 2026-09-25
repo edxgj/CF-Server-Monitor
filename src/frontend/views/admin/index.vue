@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="admin-modern">
     <AdminLogin
       v-if="!isLoggedIn"
       :trans="trans"
@@ -77,7 +77,7 @@
         </div>
       </div>
 
-      <div class="main-panel">
+      <div class="main-panel admin-workspace">
         <div class="tabs">
           <button
             class="tab-btn"
@@ -2614,3 +2614,5 @@ onMounted(() => {
   initAdmin()
 })
 </script>
+
+<style src="../../styles/admin-modern.css"></style>
