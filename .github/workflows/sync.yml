@@ -4,8 +4,9 @@ permissions:
   contents: write
 
 on:
-  schedule:
-    - cron: "0 0 * * *" # every day
+  # Scheduled upstream sync disabled to preserve local customizations.
+  # Manual sync remains available through workflow_dispatch.
+
   workflow_dispatch:
 
 jobs:
