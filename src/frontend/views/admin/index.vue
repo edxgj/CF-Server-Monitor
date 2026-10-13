@@ -81,27 +81,27 @@
             class="tab-btn"
             :class="{ active: activeTab === 'servers' }"
             @click="activeTab = 'servers'"
-          >{{ trans.servers }}</button>
+          ><svg class="admin-nav-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/></svg><span>{{ trans.servers }}</span></button>
           <button
             class="tab-btn"
             :class="{ active: activeTab === 'settings' }"
             @click="activeTab = 'settings'"
-          >{{ trans.settings }}</button>
+          ><svg class="admin-nav-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3"/><circle cx="15" cy="17" r="3"/></svg><span>{{ trans.settings }}</span></button>
           <button
             class="tab-btn"
             :class="{ active: activeTab === 'database' }"
             @click="activeTab = 'database'"
-          >{{ trans.dbManagement }}</button>
+          ><svg class="admin-nav-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 4 16 4 16 0V5M4 12c0 4 16 4 16 0"/></svg><span>{{ trans.dbManagement }}</span></button>
           <button
             class="tab-btn"
             :class="{ active: activeTab === 'themeStore' }"
             @click="activeTab = 'themeStore'"
-          >{{ trans.themeStore }}</button>
+          ><svg class="admin-nav-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg><span>{{ trans.themeStore }}</span></button>
           <button
             class="tab-btn"
             :class="{ active: activeTab === 'donation' }"
             @click="activeTab = 'donation'"
-          >{{ trans.donation }}</button>
+          ><svg class="admin-nav-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 5a5 5 0 0 0-8 1 5 5 0 0 0-8-1c-4 4 1 9 8 16 7-7 12-12 8-16Z"/></svg><span>{{ trans.donation }}</span></button>
         </div>
 
         <ServerTable
