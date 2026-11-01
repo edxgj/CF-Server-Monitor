@@ -1,0 +1,92 @@
+name: Sync upstream and keep admin theme
+
+permissions:
+  contents: write
+
+on:
+  schedule:
+    # 08:17 UTC daily. GitHub may delay scheduled runs.
+    - cron: "17 8 * * *"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    name: Merge upstream/main
+    runs-on: ubuntu-latest
+    if: github.event.repository.fork == true
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch upstream
+        run: |
+          git remote add upstream https://github.com/huilang-me/CF-Server-Monitor.git
+          git fetch upstream main
+
+      - name: Merge upstream/main
+        id: merge
+        run: |
+          if git merge-base --is-ancestor upstream/main HEAD; then
+            echo "already up to date"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if git merge upstream/main --no-edit -m "Merge upstream main while preserving custom admin theme"; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "merge conflict, keeping local admin theme files"
+          git checkout --ours -- src/frontend/views/admin/index.vue src/frontend/styles/admin-modern.css || true
+          git add src/frontend/views/admin/index.vue src/frontend/styles/admin-modern.css || true
+          if git diff --name-only --diff-filter=U | grep -q .; then
+            echo "Unresolved conflicts remain outside the admin theme:"
+            git diff --name-only --diff-filter=U
+            exit 1
+          fi
+          git commit -m "Merge upstream main while preserving custom admin theme"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Restore admin theme markers
+        if: steps.merge.outputs.changed == 'true'
+        run: |
+          python3 << 'PY'
+          from pathlib import Path
+          css = Path("src/frontend/styles/admin-modern.css")
+          vue = Path("src/frontend/views/admin/index.vue")
+          if not css.is_file() or "admin-modern" not in css.read_text(encoding="utf-8"):
+              raise SystemExit("admin-modern.css is missing after merge")
+          text = vue.read_text(encoding="utf-8")
+          changed = False
+          if 'class="admin-modern"' not in text and "class='admin-modern'" not in text:
+              text = text.replace("<div>", '<div class="admin-modern">', 1)
+              changed = True
+          if 'class="main-panel admin-workspace"' not in text:
+              text = text.replace('class="main-panel"', 'class="main-panel admin-workspace"', 1)
+              changed = True
+          style = '<style src="../../styles/admin-modern.css"></style>'
+          if style not in text:
+              text = text.rstrip() + "\n" + style + "\n"
+              changed = True
+          if changed:
+              vue.write_text(text, encoding="utf-8")
+              print("admin theme markers restored")
+          else:
+              print("admin theme markers already present")
+          PY
+          git add src/frontend/views/admin/index.vue src/frontend/styles/admin-modern.css
+          if ! git diff --cached --quiet; then
+            git commit -m "Restore custom admin theme after upstream merge"
+          fi
+
+      - name: Push main
+        if: steps.merge.outputs.changed == 'true'
+        run: git push origin HEAD:main
